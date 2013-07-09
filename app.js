@@ -36,11 +36,16 @@ app.get('/', routes.index);
 var users = [];
 
 io.sockets.on('connection', function(socket) {
-	socket.emit('auth', {}); 
+	console.log("started");
+	//socket.emit('auth', {}); 
 	socket.on('setnick', function(data) {
-		// users.append(data.nickname);
-		console.log(data); 
+		users.push(data.nickname);
+		socket.broadcast.emit('updateNick', data.nickname);
 		socket.emit('welcome', {users: users});
+	});
+	socket.on('msg', function(message) {
+		//console.log("MSG "+message);
+		socket.broadcast.emit("msg", message);
 	});
 });
 
